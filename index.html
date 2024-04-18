@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking_Recipe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar login-navbar">
+        <a href="./index.html" class="logo">Circumference Cooking and Food Recipe</a>
+            <a href="about.html">About</a><a href="contact.html">Contact</a>
+        <ul class="nav-links">
+            <li><a href="./login.php" class="btn">Login</a></li> 
+        </ul>
+    </div>
+
+    <div class="hero">
+        <div>
+            <h1>Welcome to Circumference Cooking and Food Recipe</h1>
+            <p>Explore the best cooking recipe for your next meal</p>
+        </div>
+    </div>
+    
+    <div class="card-wrapper">
+        <h2 class="">All Recipe</h2>
+        <div class="card-container" id="recipe-container">
+            <!-- Recipe cards will be dynamically added here -->
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Circumference Cooking and Food Recipe. All rights reserved.</p>
+    </div>
+
+    <script>
+    // Fetch recipes from the server
+    fetch('server-side/fetch_recipes.php')
+    .then(response => response.json())
+    .then(recipes => {
+        // Loop through each recipe and generate a card
+        recipes.forEach(recipe => {
+            const card = document.createElement('a');
+            card.classList.add('card');
+            card.href = `./recipe.html?id=${recipe.id}`;
+            
+            const img = document.createElement('img');
+
+        
+
+            if (recipe.media_path !== null) {
+            const filename = recipe.media_path.startsWith('.') ? recipe.media_path.substring(1) : recipe.media_path;
+            img.src = filename;
+        } else {
+            img.src = './assets/food 3.jfif'; // Set a default image path if media_path is null
+        }
+
+
+            img.alt = 'Food Image';
+            card.appendChild(img);
+            
+            const cardContent = document.createElement('div');
+            cardContent.classList.add('card-content');
+            
+            const title = document.createElement('h2');
+            title.textContent = recipe.title;
+            cardContent.appendChild(title);
+            
+            const description = document.createElement('p');
+            description.textContent = recipe.description;
+            cardContent.appendChild(description);
+            
+            card.appendChild(cardContent);
+            
+            document.getElementById('recipe-container').appendChild(card);
+        });
+    })
+    .catch(error => console.error('Error fetching recipes:', error));
+    </script>
+</body>
+</html>

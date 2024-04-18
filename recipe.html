@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Recipe Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar login-navbar">
+        <a href="./index.html" class="logo">Circumference Cooking and Food Recipe</a>
+            <a href="about.html">About</a><a href="contact.html">Contact</a>
+        <ul class="nav-links">
+            <li><a href="./login.php" class="btn">Login</a></li> 
+        </ul>
+    </div>
+    <main>
+
+        <div id="recipe-details" class="container" style="margin-top: 100px;">
+            <!-- Recipe details will be dynamically inserted here -->
+        </div>
+    </main>
+    <script>
+        // Fetch recipe details based on recipe ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeId = urlParams.get('id');
+        
+        fetch(`server-side/fetch_recipe.php?id=${recipeId}`)
+        .then(response => response.json())
+        .then(recipe => {
+            // Populate the page with recipe details
+            const recipeDetailsContainer = document.getElementById('recipe-details');
+
+            // Create elements for each recipe detail
+            const img = document.createElement('img');
+            img.style.width = '100%'
+
+            if (recipe.media_path !== null) {
+            const filename = recipe.media_path.startsWith('.') ? recipe.media_path.substring(1) : recipe.media_path;
+            img.src = filename;
+        } else {
+            img.src = ''; // Set a default image path if media_path is null
+        }
+            // recipeImage.src = recipe.image_url; // Replace with actual property name
+            img.alt = 'Recipe Image';
+            recipeDetailsContainer.appendChild(img);
+
+            const recipeTitle = document.createElement('h2');
+            recipeTitle.textContent = recipe.title; // Replace with actual property name
+            recipeDetailsContainer.appendChild(recipeTitle);
+
+            const recipeDescription = document.createElement('p');
+            recipeDescription.textContent = recipe.description; // Replace with actual property name
+            recipeDetailsContainer.appendChild(recipeDescription);
+
+            // Add more elements for other recipe details (ingredients, instructions, etc.)
+        })
+        .catch(error => console.error('Error fetching recipe:', error));
+    </script>
+</body>
+</html>
